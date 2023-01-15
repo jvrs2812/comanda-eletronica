@@ -67,4 +67,9 @@ public class StorageAdapter implements IStorageAdapter{
 
         return urls;
     }
+
+    @Override
+    public void deleteImage(String urlImage) {
+        _client.deleteObject(_backet, FilenameUtils.getName(urlImage));
+    }
 }

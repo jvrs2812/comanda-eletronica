@@ -1,9 +1,6 @@
 package com.comanda.comanda.Product;
 
-import com.comanda.comanda.Product.Exception.ImageException;
-import com.comanda.comanda.Product.Exception.PageException;
-import com.comanda.comanda.Product.Exception.ProductIdException;
-import com.comanda.comanda.Product.Exception.ProductNotExist;
+import com.comanda.comanda.Product.Exception.*;
 import com.comanda.comanda.Product.UseCase.Products;
 import com.comanda.comanda.Product.domain.ProductAllResponse;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
@@ -77,7 +74,23 @@ public class ProductController extends HandleValidationException {
             List<String> listError = new ArrayList<String>();
             listError.add(e.getMessage());
             return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(listError), HttpStatus.BAD_REQUEST);
-        } catch (Exception e){
+        } catch (ProductCategoryException e){
+            List<String> listError = new ArrayList<String>();
+            listError.add(e.getMessage());
+            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(listError), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("v1/api/product/{id}")
+    public ResponseEntity delete(@PathVariable("id") String id){
+        try {
+            _products.deleteById(id);
+            return new ResponseEntity(null, HttpStatus.OK);
+        }catch (ProductNotExist e){
+            List<String> listError = new ArrayList<String>();
+            listError.add(e.getMessage());
+            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(listError), HttpStatus.BAD_REQUEST);
+        } catch (ProductIdException e) {
             List<String> listError = new ArrayList<String>();
             listError.add(e.getMessage());
             return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(listError), HttpStatus.BAD_REQUEST);

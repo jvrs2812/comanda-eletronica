@@ -1,6 +1,7 @@
 package com.comanda.comanda.Product.Adpter;
 
 import com.comanda.comanda.Product.Exception.ProductNotExist;
+import com.comanda.comanda.Product.Repository.ProductModelRepository;
 import com.comanda.comanda.Product.domain.ProductAllResponse;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
 import com.comanda.comanda.Product.domain.ProductGetDto;
@@ -17,4 +18,6 @@ public interface IAdpterProduct {
     boolean existProduct(UUID id);
 
     ProductGetDto getById(UUID id) throws ProductNotExist;
+
+    void deletbyId(String id) throws ProductNotExist;
 }

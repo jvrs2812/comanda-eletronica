@@ -1,5 +1,6 @@
 package com.comanda.comanda.Product.Repository;
 
+import com.comanda.comanda.Category.repository.CategoryModelRepository;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
 import com.comanda.comanda.Product.domain.ProductGetDto;
 import jakarta.persistence.*;
@@ -30,13 +31,24 @@ public class ProductModelRepository {
     private String obs;
 
     @NotNull
-    private UUID categoryId;
-    public void setImageUrl(List<String> imageUrl) {
-        this.imageUrls = imageUrl;
+    @ManyToOne
+    @JoinColumn(name = "categoryId")
+    private CategoryModelRepository categoryId;
+
+    public List<String> getImageUrls() {
+        return imageUrls;
     }
 
-    public List<String> getImageUrl() {
-        return imageUrls;
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
+    }
+
+    public CategoryModelRepository getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(CategoryModelRepository categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getObs() {
@@ -45,14 +57,6 @@ public class ProductModelRepository {
 
     public void setObs(String obs) {
         this.obs = obs;
-    }
-
-    public UUID getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(UUID categoryId) {
-        this.categoryId = categoryId;
     }
 
     public UUID  getId() {
@@ -88,7 +92,7 @@ public class ProductModelRepository {
 
 
     public ProductGetDto convertToDomain(){
-        return new ProductGetDto(id, title, description, price, imageUrls, obs, categoryId.toString());
+        return new ProductGetDto(id, title, description, price, imageUrls, obs, categoryId.getId().toString());
     }
 
     static public ProductModelRepository convertToModel(ProductBaseDto dto){
@@ -96,7 +100,12 @@ public class ProductModelRepository {
         prod.description = dto.getDescription();
         prod.price = dto.getPrice();
         prod.title = dto.getTitle();
-        prod.categoryId = UUID.fromString(dto.getCategoryId());
+
+        CategoryModelRepository category = new CategoryModelRepository();
+        category.setId(UUID.fromString(dto.getCategoryId()));
+
+        prod.categoryId = category;
+
         prod.obs = dto.getObs();
         prod.imageUrls = dto.getImageUrls();
 

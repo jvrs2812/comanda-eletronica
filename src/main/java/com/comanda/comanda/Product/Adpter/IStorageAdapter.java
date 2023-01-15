@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface IStorageAdapter {
     List<String> saveImage(MultipartFile[] multipartFile);
+
+    void deleteImage(String urlImage);
 }

@@ -1,11 +1,9 @@
 package com.comanda.comanda.Product.UseCase;
 
+import com.comanda.comanda.Category.Adpter.IAdpterCategory;
 import com.comanda.comanda.Product.Adpter.IAdpterProduct;
 import com.comanda.comanda.Product.Adpter.IStorageAdapter;
-import com.comanda.comanda.Product.Exception.ImageException;
-import com.comanda.comanda.Product.Exception.PageException;
-import com.comanda.comanda.Product.Exception.ProductIdException;
-import com.comanda.comanda.Product.Exception.ProductNotExist;
+import com.comanda.comanda.Product.Exception.*;
 import com.comanda.comanda.Product.domain.ProductAllResponse;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
 import com.comanda.comanda.Product.domain.ProductGetDto;
@@ -21,6 +19,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Products {
     @Autowired
     private IAdpterProduct _product;
+
+    @Autowired
+    IAdpterCategory _category;
 
     @Autowired
     private IStorageAdapter _storage;
@@ -55,8 +56,9 @@ public class Products {
         return _product.getAll(page);
     }
 
-    public void save(ProductBaseDto product, MultipartFile[] images) throws ProductNotExist, ImageException {
-        if(!isValidUUID(product.getCategoryId())) throw new ProductNotExist("Category id is invalid");
+    public void save(ProductBaseDto product, MultipartFile[] images) throws ImageException, ProductCategoryException {
+        if(!isValidUUID(product.getCategoryId())) throw new ProductCategoryException("Category id is invalid");
+        if(!_category.exists(product.getCategoryId())) throw new ProductCategoryException("Category is not found");
 
         List<String> urls = saveImageProduct(images);
 
@@ -93,5 +95,17 @@ public class Products {
         if (isNotValidSizeImage.get()) throw new ImageException("file size is more is 2mb");
 
         return _storage.saveImage(images);
+    }
+
+    public void deleteById(String id) throws ProductIdException, ProductNotExist {
+        ProductGetDto dto = getById(id);
+
+        if(!_product.existProduct(UUID.fromString(id))) throw new ProductNotExist("this product is not found");
+
+        _product.deletbyId(id);
+
+        for (int i = 0; i < dto.getImageUrls().size(); i++) {
+            _storage.deleteImage(dto.getImageUrls().get(i));
+        }
     }
 }
