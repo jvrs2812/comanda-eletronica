@@ -1,21 +1,22 @@
 package com.comanda.comanda.Product.Adpter;
 
-import com.comanda.comanda.Product.Exception.ProductNotExist;
 import com.comanda.comanda.Product.Repository.ProductModelRepository;
 import com.comanda.comanda.Product.Repository.ProductRepository;
 import com.comanda.comanda.Product.domain.ProductAllResponse;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
 import com.comanda.comanda.Product.domain.ProductGetDto;
+import com.comanda.comanda.utils.ComandaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.comanda.comanda.Product.Exception.ProductException.PRODUCT_NOT_FOUND;
 
 @Component
 public class AdpterProduct implements IAdpterProduct {
@@ -60,16 +61,16 @@ public class AdpterProduct implements IAdpterProduct {
     }
 
     @Override
-    public ProductGetDto getById(UUID id) throws ProductNotExist {
+    public ProductGetDto getById(UUID id) throws ComandaException {
         if(existProduct(id)){
             return _repo.getById(id).convertToDomain();
         }else{
-            throw new ProductNotExist("Product not found");
+            throw new ComandaException(PRODUCT_NOT_FOUND);
         }
     }
 
     @Override
-    public void deletbyId(String id) throws ProductNotExist {
+    public void deletbyId(String id) {
         _repo.deleteById(UUID.fromString(id));
     }
 }

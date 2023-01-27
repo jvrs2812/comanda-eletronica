@@ -5,6 +5,7 @@ import com.comanda.comanda.Product.UseCase.Products;
 import com.comanda.comanda.Product.domain.ProductAllResponse;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
 import com.comanda.comanda.Product.domain.ProductGetDto;
+import com.comanda.comanda.utils.ComandaException;
 import com.comanda.comanda.utils.HandleValidationException;
 import com.comanda.comanda.utils.ResponseSchema;
 import jakarta.validation.Valid;
@@ -29,10 +30,8 @@ public class ProductController extends HandleValidationException {
         try {
             ProductAllResponse _prod = _products.getAll(page);
             return ResponseEntity.ok(new ResponseSchema<ProductAllResponse>(_prod));
-        } catch (PageException e) {
-            List<String> listError = new ArrayList<String>();
-            listError.add(e.getMessage());
-            return new ResponseEntity<ResponseSchema<ProductAllResponse>>(new ResponseSchema<ProductAllResponse>(listError), HttpStatus.BAD_REQUEST);
+        } catch (ComandaException e) {
+            return new ResponseEntity<ResponseSchema<ProductAllResponse>>(new ResponseSchema<ProductAllResponse>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
         }
     }
 
@@ -41,10 +40,8 @@ public class ProductController extends HandleValidationException {
         try {
             _products.put(id, dto);
             return new ResponseEntity(null, HttpStatus.OK);
-        }catch (ProductNotExist e){
-            List<String> listError = new ArrayList<String>();
-            listError.add(e.getMessage());
-            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(listError), HttpStatus.BAD_REQUEST);
+        }catch (ComandaException e) {
+            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
         }
     }
 
@@ -53,14 +50,8 @@ public class ProductController extends HandleValidationException {
         try {
             ProductGetDto _prod = _products.getById(id);
             return new ResponseEntity(new ResponseSchema<ProductGetDto>(_prod), HttpStatus.OK);
-        }catch (ProductIdException e){
-            List<String> listError = new ArrayList<String>();
-            listError.add(e.getMessage());
-            return new ResponseEntity<ResponseSchema<ProductGetDto>>(new ResponseSchema<ProductGetDto>(listError), HttpStatus.BAD_REQUEST);
-        } catch (ProductNotExist e) {
-            List<String> listError = new ArrayList<String>();
-            listError.add(e.getMessage());
-            return new ResponseEntity<ResponseSchema<ProductGetDto>>(new ResponseSchema<ProductGetDto>(listError), HttpStatus.NOT_FOUND);
+        } catch (ComandaException e) {
+            return new ResponseEntity<ResponseSchema<ProductGetDto>>(new ResponseSchema<ProductGetDto>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
         }
     }
 
@@ -70,14 +61,8 @@ public class ProductController extends HandleValidationException {
         try {
             _products.save(dto, images);
             return new ResponseEntity(null, HttpStatus.CREATED);
-        }catch (ImageException e){
-            List<String> listError = new ArrayList<String>();
-            listError.add(e.getMessage());
-            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(listError), HttpStatus.BAD_REQUEST);
-        } catch (ProductCategoryException e){
-            List<String> listError = new ArrayList<String>();
-            listError.add(e.getMessage());
-            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(listError), HttpStatus.BAD_REQUEST);
+        }catch (ComandaException e) {
+            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
         }
     }
 
@@ -86,14 +71,8 @@ public class ProductController extends HandleValidationException {
         try {
             _products.deleteById(id);
             return new ResponseEntity(null, HttpStatus.OK);
-        }catch (ProductNotExist e){
-            List<String> listError = new ArrayList<String>();
-            listError.add(e.getMessage());
-            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(listError), HttpStatus.BAD_REQUEST);
-        } catch (ProductIdException e) {
-            List<String> listError = new ArrayList<String>();
-            listError.add(e.getMessage());
-            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(listError), HttpStatus.BAD_REQUEST);
+        } catch (ComandaException e) {
+            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
         }
     }
 

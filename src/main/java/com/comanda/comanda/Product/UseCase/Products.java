@@ -7,6 +7,7 @@ import com.comanda.comanda.Product.Exception.*;
 import com.comanda.comanda.Product.domain.ProductAllResponse;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
 import com.comanda.comanda.Product.domain.ProductGetDto;
+import com.comanda.comanda.utils.ComandaException;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.comanda.comanda.Product.Exception.ProductException.*;
+import static com.comanda.comanda.utils.enums.EnumException.*;
 
 @Component
 public class Products {
@@ -38,27 +42,27 @@ public class Products {
         }
     }
 
-    public void put(String id, ProductBaseDto base) throws ProductNotExist {
-        if(!isValidUUID(base.getCategoryId())) throw new ProductNotExist("Category id is invalid");
+    public void put(String id, ProductBaseDto base) throws ComandaException {
+        if(!isValidUUID(base.getCategoryId())) throw new ComandaException(PRODUCT_ID_CATEGORY);
 
-        if(!isValidUUID(id)) throw new ProductNotExist("Product id is invalid");
+        if(!isValidUUID(id)) throw new ComandaException(PRODUCT_ID_ERROR);
 
         if(!_product.existProduct(UUID.fromString(id))){
-            throw new ProductNotExist("this product is not found");
+            throw new ComandaException(PRODUCT_NOT_FOUND);
         }
         _product.put(id, base);
     }
 
-    public ProductAllResponse getAll(int page) throws PageException {
+    public ProductAllResponse getAll(int page) throws ComandaException {
         if(page <= 0) {
-            throw new PageException("invalid page");
+            throw new ComandaException(INVALID_PAGE);
         }
         return _product.getAll(page);
     }
 
-    public void save(ProductBaseDto product, MultipartFile[] images) throws ImageException, ProductCategoryException {
-        if(!isValidUUID(product.getCategoryId())) throw new ProductCategoryException("Category id is invalid");
-        if(!_category.exists(product.getCategoryId())) throw new ProductCategoryException("Category is not found");
+    public void save(ProductBaseDto product, MultipartFile[] images) throws ComandaException {
+        if(!isValidUUID(product.getCategoryId())) throw new ComandaException(PRODUCT_ID_CATEGORY);
+        if(!_category.exists(product.getCategoryId())) throw new ComandaException(PRODUCT_CATEGORY_NOT_FOUND);
 
         List<String> urls = saveImageProduct(images);
 
@@ -67,15 +71,15 @@ public class Products {
         _product.save(product);
     }
 
-    public ProductGetDto getById(String id) throws ProductIdException, ProductNotExist {
-        if(!isValidUUID(id)) throw new ProductIdException("Product id is invalid");
+    public ProductGetDto getById(String id) throws ComandaException {
+        if(!isValidUUID(id)) throw new ComandaException(PRODUCT_ID_ERROR);
 
         ProductGetDto _prod = _product.getById(UUID.fromString(id));
 
         return _prod;
     }
 
-    public List<String> saveImageProduct(MultipartFile[] images) throws ImageException {
+    public List<String> saveImageProduct(MultipartFile[] images) throws ComandaException {
         AtomicBoolean isNotValidImage = new AtomicBoolean(false);
         AtomicBoolean isNotValidSizeImage = new AtomicBoolean(false);
 
@@ -91,16 +95,16 @@ public class Products {
             if(!Arrays.stream(extensionValid).anyMatch(extension::equals)) isNotValidImage.set(true);
         });
 
-        if (isNotValidImage.get()) throw new ImageException("file extension is not valid");
-        if (isNotValidSizeImage.get()) throw new ImageException("file size is more is 2mb");
+        if (isNotValidImage.get()) throw new ComandaException(INVALID_EXTENSION);
+        if (isNotValidSizeImage.get()) throw new ComandaException(INVALID_FILE_SIZE);
 
         return _storage.saveImage(images);
     }
 
-    public void deleteById(String id) throws ProductIdException, ProductNotExist {
+    public void deleteById(String id) throws ComandaException {
         ProductGetDto dto = getById(id);
 
-        if(!_product.existProduct(UUID.fromString(id))) throw new ProductNotExist("this product is not found");
+        if(!_product.existProduct(UUID.fromString(id))) throw new ComandaException(PRODUCT_NOT_FOUND);
 
         _product.deletbyId(id);
 
