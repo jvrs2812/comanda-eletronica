@@ -1,13 +1,12 @@
 package com.comanda.comanda.Product;
 
-import com.comanda.comanda.Product.Exception.*;
 import com.comanda.comanda.Product.UseCase.Products;
-import com.comanda.comanda.Product.domain.ProductAllResponse;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
 import com.comanda.comanda.Product.domain.ProductGetDto;
 import com.comanda.comanda.utils.ComandaException;
 import com.comanda.comanda.utils.HandleValidationException;
 import com.comanda.comanda.utils.ResponseSchema;
+import com.comanda.comanda.utils.commom.ResponsePageable;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,22 +15,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.print.attribute.standard.Media;
-import java.util.ArrayList;
-import java.util.List;
-
 @RestController
 public class ProductController extends HandleValidationException {
     @Autowired
     private Products _products;
 
     @GetMapping("v1/api/products")
-    public ResponseEntity<ResponseSchema<ProductAllResponse>> getAll(@RequestParam int page){
+    public ResponseEntity<ResponseSchema<ResponsePageable<ProductGetDto>>> getAll(@RequestParam int page){
         try {
-            ProductAllResponse _prod = _products.getAll(page);
-            return ResponseEntity.ok(new ResponseSchema<ProductAllResponse>(_prod));
+            ResponsePageable<ProductGetDto> _prod = _products.getAll(page);
+            return ResponseEntity.ok(new ResponseSchema<ResponsePageable<ProductGetDto>>(_prod));
         } catch (ComandaException e) {
-            return new ResponseEntity<ResponseSchema<ProductAllResponse>>(new ResponseSchema<ProductAllResponse>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
+            return new ResponseEntity<ResponseSchema<ResponsePageable<ProductGetDto>>>(new ResponseSchema<ResponsePageable<ProductGetDto>>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
         }
     }
 

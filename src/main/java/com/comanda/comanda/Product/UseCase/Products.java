@@ -1,13 +1,14 @@
 package com.comanda.comanda.Product.UseCase;
 
 import com.comanda.comanda.Category.Adpter.IAdpterCategory;
+import com.comanda.comanda.Category.Exception.CategoryException;
 import com.comanda.comanda.Product.Adpter.IAdpterProduct;
 import com.comanda.comanda.Product.Adpter.IStorageAdapter;
-import com.comanda.comanda.Product.Exception.*;
-import com.comanda.comanda.Product.domain.ProductAllResponse;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
 import com.comanda.comanda.Product.domain.ProductGetDto;
 import com.comanda.comanda.utils.ComandaException;
+import com.comanda.comanda.utils.Validations.Validations;
+import com.comanda.comanda.utils.commom.ResponsePageable;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,20 +33,10 @@ public class Products {
 
     private static final String[] extensionValid = new String[] {"JPG","JPEG","PNG"};
 
-    private boolean isValidUUID(String uuid){
-        try {
-            UUID.fromString(uuid);
-            return true;
-
-        }catch (Exception e){
-            return false;
-        }
-    }
-
     public void put(String id, ProductBaseDto base) throws ComandaException {
-        if(!isValidUUID(base.getCategoryId())) throw new ComandaException(PRODUCT_ID_CATEGORY);
+        if(!Validations.isValidId(base.getCategoryId())) throw new ComandaException(CategoryException.CATEGORY_ID_EXCEPTION);
 
-        if(!isValidUUID(id)) throw new ComandaException(PRODUCT_ID_ERROR);
+        if(!Validations.isValidId(id)) throw new ComandaException(PRODUCT_ID_ERROR);
 
         if(!_product.existProduct(UUID.fromString(id))){
             throw new ComandaException(PRODUCT_NOT_FOUND);
@@ -53,7 +44,7 @@ public class Products {
         _product.put(id, base);
     }
 
-    public ProductAllResponse getAll(int page) throws ComandaException {
+    public ResponsePageable<ProductGetDto> getAll(int page) throws ComandaException {
         if(page <= 0) {
             throw new ComandaException(INVALID_PAGE);
         }
@@ -61,8 +52,8 @@ public class Products {
     }
 
     public void save(ProductBaseDto product, MultipartFile[] images) throws ComandaException {
-        if(!isValidUUID(product.getCategoryId())) throw new ComandaException(PRODUCT_ID_CATEGORY);
-        if(!_category.exists(product.getCategoryId())) throw new ComandaException(PRODUCT_CATEGORY_NOT_FOUND);
+        if(!Validations.isValidId(product.getCategoryId())) throw new ComandaException(CategoryException.CATEGORY_ID_EXCEPTION);
+        if(!_category.exists(product.getCategoryId())) throw new ComandaException(CategoryException.CATEGORY_NOT_FOUND);
 
         List<String> urls = saveImageProduct(images);
 
@@ -72,7 +63,7 @@ public class Products {
     }
 
     public ProductGetDto getById(String id) throws ComandaException {
-        if(!isValidUUID(id)) throw new ComandaException(PRODUCT_ID_ERROR);
+        if(!Validations.isValidId(id)) throw new ComandaException(PRODUCT_ID_ERROR);
 
         ProductGetDto _prod = _product.getById(UUID.fromString(id));
 

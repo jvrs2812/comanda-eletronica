@@ -2,10 +2,10 @@ package com.comanda.comanda.Product.Adpter;
 
 import com.comanda.comanda.Product.Repository.ProductModelRepository;
 import com.comanda.comanda.Product.Repository.ProductRepository;
-import com.comanda.comanda.Product.domain.ProductAllResponse;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
 import com.comanda.comanda.Product.domain.ProductGetDto;
 import com.comanda.comanda.utils.ComandaException;
+import com.comanda.comanda.utils.commom.ResponsePageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,7 @@ public class AdpterProduct implements IAdpterProduct {
     private ProductRepository _repo;
 
     @Override
-    public ProductAllResponse getAll(int page) {
+    public ResponsePageable<ProductGetDto> getAll(int page) {
         Pageable pageable = PageRequest.of(page - 1, 20);
 
         Page<ProductModelRepository> lista = _repo.findAll(pageable);
@@ -36,7 +36,7 @@ public class AdpterProduct implements IAdpterProduct {
             listaDomain.add(lista.getContent().get(i).convertToDomain());
         }
 
-        ProductAllResponse response = new ProductAllResponse(listaDomain, page, lista.getTotalPages());
+        ResponsePageable response = new ResponsePageable(listaDomain, page, lista.getTotalPages());
 
         return response;
     }
@@ -72,5 +72,10 @@ public class AdpterProduct implements IAdpterProduct {
     @Override
     public void deletbyId(String id) {
         _repo.deleteById(UUID.fromString(id));
+    }
+
+    @Override
+    public boolean existwithCategoryId(UUID id) {
+        return _repo.existCategoryId(id);
     }
 }

@@ -5,9 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public enum ProductException implements ErrorInterface {
     PRODUCT_NOT_FOUND("product not found", 404),
-    PRODUCT_ID_ERROR("product id is invalid", HttpStatus.BAD_REQUEST.value()),
-    PRODUCT_ID_CATEGORY("category id is invalid", HttpStatus.BAD_REQUEST.value()),
-    PRODUCT_CATEGORY_NOT_FOUND("category is not found", HttpStatus.BAD_REQUEST.value());
+    PRODUCT_ID_ERROR("product id is invalid", HttpStatus.BAD_REQUEST.value());
 
 
 

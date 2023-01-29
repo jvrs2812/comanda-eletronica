@@ -14,4 +14,7 @@ import java.util.UUID;
 @Repository
 public interface ProductRepository extends JpaRepository<ProductModelRepository, UUID> {
     Page<ProductModelRepository> findAll(Pageable pageable);
+
+    @Query(value = "select case when count(*) > 0 then true else false end from product where category_id = :category_id", nativeQuery = true)
+    boolean existCategoryId(@Param("category_id") UUID id);
 }
