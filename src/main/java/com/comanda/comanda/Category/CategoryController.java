@@ -21,6 +21,10 @@ public class CategoryController extends HandleValidationException {
     @Autowired
     private Categories _cat;
 
+    public CategoryController(Categories cat){
+        this._cat = cat;
+    }
+
     @GetMapping("v1/api/category")
     public ResponseEntity<ResponseSchema<ResponsePageable<CategoryGetDto>>> getAllCategory(@RequestParam("page") int page){
         return ResponseEntity.ok(new ResponseSchema<ResponsePageable<CategoryGetDto>>(_cat.getAll(page)));
