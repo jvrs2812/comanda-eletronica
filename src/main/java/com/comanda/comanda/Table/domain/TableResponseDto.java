@@ -6,14 +6,14 @@ import java.util.UUID;
 
 public class TableResponseDto extends TableBaseDto{
 
-    public TableResponseDto(UUID id, String identification, int amount_people, StatusTable status) {
+    public TableResponseDto(UUID id, String identification, int amount_people, int status) {
         super(identification, amount_people);
         this.id = id;
         this.status = status;
     }
 
     private UUID id;
-    private StatusTable status;
+    private int status;
 
     public UUID getId() {
         return id;
@@ -23,11 +23,11 @@ public class TableResponseDto extends TableBaseDto{
         this.id = id;
     }
 
-    public StatusTable getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(StatusTable status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 }

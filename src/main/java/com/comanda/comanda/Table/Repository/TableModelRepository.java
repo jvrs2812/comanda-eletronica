@@ -28,6 +28,46 @@ public class TableModelRepository {
     @NotNull
     private boolean enable;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(String identification) {
+        this.identification = identification;
+    }
+
+    public int getAmount_people() {
+        return amount_people;
+    }
+
+    public void setAmount_people(int amount_people) {
+        this.amount_people = amount_people;
+    }
+
+    public StatusTable getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusTable status) {
+        this.status = status;
+    }
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
     static public TableModelRepository convertToModel(TableBaseDto dto){
         TableModelRepository table = new TableModelRepository();
         table.id = UUID.randomUUID();
@@ -40,6 +80,6 @@ public class TableModelRepository {
     }
 
     public TableResponseDto convertToDomain(){
-        return new TableResponseDto(this.id, this.identification, this.amount_people, this.status);
+        return new TableResponseDto(this.id, this.identification, this.amount_people, this.status.ordinal());
     }
 }

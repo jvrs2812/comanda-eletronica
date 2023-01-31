@@ -74,4 +74,9 @@ public class AdpterTable implements IAdpterTable{
     public void updateAmountPeople(int amount, UUID id) {
         _repo.updateAmountPeople(amount, id);
     }
+
+    @Override
+    public boolean existTableWithID(UUID id) {
+        return _repo.existsById(id);
+    }
 }

@@ -22,4 +22,6 @@ public interface IAdpterTable {
     UUID getIdWithIdentification(String ind);
 
     void updateAmountPeople(int amount, UUID id);
+
+    boolean existTableWithID(UUID id);
 }
