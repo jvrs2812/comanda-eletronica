@@ -1,5 +1,7 @@
 package com.comanda.comanda.utils;
 
+import org.springframework.http.HttpStatusCode;
+
 import java.util.List;
 
 public class ResponseSchema<T> {

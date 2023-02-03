@@ -31,13 +31,9 @@ public class CategoryController extends HandleValidationException {
     }
 
     @GetMapping("v1/api/category/{id}")
-    public ResponseEntity<ResponseSchema<CategoryGetDto>> getCategoryId(@PathVariable("id") String id){
-        try {
-            CategoryGetDto cat = _cat.getIdCategory(id);
-            return new ResponseEntity<ResponseSchema<CategoryGetDto>>(new ResponseSchema<CategoryGetDto>(cat), HttpStatus.OK);
-        } catch (ComandaException e) {
-            return new ResponseEntity<ResponseSchema<CategoryGetDto>>(new ResponseSchema<CategoryGetDto>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
-        }
+    public ResponseEntity<ResponseSchema<CategoryGetDto>> getCategoryId(@PathVariable("id") String id) throws ComandaException {
+        CategoryGetDto cat = _cat.getIdCategory(id);
+        return new ResponseEntity<ResponseSchema<CategoryGetDto>>(new ResponseSchema<CategoryGetDto>(cat), HttpStatus.OK);
     }
 
     @PostMapping("v1/api/category")
@@ -47,12 +43,8 @@ public class CategoryController extends HandleValidationException {
     }
 
     @DeleteMapping("v1/api/category/{categoryId}")
-    public ResponseEntity del(@PathVariable("categoryId") String id){
-        try {
-            _cat.delete(id);
-            return new ResponseEntity(null, HttpStatus.OK);
-        } catch (ComandaException e) {
-            return new ResponseEntity<ResponseSchema>(new ResponseSchema(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
-        }
+    public ResponseEntity del(@PathVariable("categoryId") String id) throws ComandaException {
+        _cat.delete(id);
+        return new ResponseEntity(null, HttpStatus.OK);
     }
 }

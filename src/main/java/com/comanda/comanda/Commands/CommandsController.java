@@ -19,22 +19,14 @@ public class CommandsController extends HandleValidationException {
     @Autowired
     private CommandsUseCase _commands;
     @PostMapping("v1/api/commands")
-    public ResponseEntity save(@RequestBody @Valid CommandsBaseDto dto){
-        try {
-            _commands.save(dto);
-            return new ResponseEntity(null, HttpStatus.OK);
-        } catch (ComandaException e) {
-            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
-        }
+    public ResponseEntity save(@RequestBody @Valid CommandsBaseDto dto) throws ComandaException {
+        _commands.save(dto);
+        return new ResponseEntity(null, HttpStatus.OK);
     }
 
     @GetMapping("v1/api/commands/{id}")
-    public ResponseEntity<ResponseSchema<CommandsGetDto>> getById(@PathVariable("id") String id){
-        try {
-            CommandsGetDto response = _commands.getById(id);
-            return new ResponseEntity<ResponseSchema<CommandsGetDto>>(new ResponseSchema<CommandsGetDto>(response),HttpStatus.OK);
-        } catch (ComandaException e) {
-            return new ResponseEntity<ResponseSchema<CommandsGetDto>>(new ResponseSchema<CommandsGetDto>(e.listError()),HttpStatus.valueOf(e.getStatusCode()));
-        }
+    public ResponseEntity<ResponseSchema<CommandsGetDto>> getById(@PathVariable("id") String id) throws ComandaException {
+        CommandsGetDto response = _commands.getById(id);
+        return new ResponseEntity<ResponseSchema<CommandsGetDto>>(new ResponseSchema<CommandsGetDto>(response),HttpStatus.OK);
     }
 }

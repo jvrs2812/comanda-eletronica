@@ -21,54 +21,34 @@ public class ProductController extends HandleValidationException {
     private Products _products;
 
     @GetMapping("v1/api/products")
-    public ResponseEntity<ResponseSchema<ResponsePageable<ProductGetDto>>> getAll(@RequestParam int page){
-        try {
-            ResponsePageable<ProductGetDto> _prod = _products.getAll(page);
-            return ResponseEntity.ok(new ResponseSchema<ResponsePageable<ProductGetDto>>(_prod));
-        } catch (ComandaException e) {
-            return new ResponseEntity<ResponseSchema<ResponsePageable<ProductGetDto>>>(new ResponseSchema<ResponsePageable<ProductGetDto>>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
-        }
+    public ResponseEntity<ResponseSchema<ResponsePageable<ProductGetDto>>> getAll(@RequestParam int page) throws ComandaException {
+       ResponsePageable<ProductGetDto> _prod = _products.getAll(page);
+       return ResponseEntity.ok(new ResponseSchema<ResponsePageable<ProductGetDto>>(_prod));
     }
 
     @PutMapping("v1/api/product/{id}")
-    public ResponseEntity put(@PathVariable("id") String id, @Valid @RequestBody ProductBaseDto dto){
-        try {
-            _products.put(id, dto);
-            return new ResponseEntity(null, HttpStatus.OK);
-        }catch (ComandaException e) {
-            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
-        }
+    public ResponseEntity put(@PathVariable("id") String id, @Valid @RequestBody ProductBaseDto dto) throws ComandaException {
+        _products.put(id, dto);
+        return new ResponseEntity(null, HttpStatus.OK);
     }
 
     @GetMapping("v1/api/product/{id}")
-    public ResponseEntity<ResponseSchema<ProductGetDto>> put(@PathVariable("id") String id){
-        try {
-            ProductGetDto _prod = _products.getById(id);
-            return new ResponseEntity(new ResponseSchema<ProductGetDto>(_prod), HttpStatus.OK);
-        } catch (ComandaException e) {
-            return new ResponseEntity<ResponseSchema<ProductGetDto>>(new ResponseSchema<ProductGetDto>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
-        }
+    public ResponseEntity<ResponseSchema<ProductGetDto>> put(@PathVariable("id") String id) throws ComandaException {
+        ProductGetDto _prod = _products.getById(id);
+        return new ResponseEntity(new ResponseSchema<ProductGetDto>(_prod), HttpStatus.OK);
     }
 
 
     @PostMapping(value = "v1/api/product",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity save(@RequestPart("product") @Valid ProductBaseDto dto, @RequestParam MultipartFile[] images){
-        try {
-            _products.save(dto, images);
-            return new ResponseEntity(null, HttpStatus.CREATED);
-        }catch (ComandaException e) {
-            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
-        }
+    public ResponseEntity save(@RequestPart("product") @Valid ProductBaseDto dto, @RequestParam MultipartFile[] images) throws ComandaException {
+        _products.save(dto, images);
+        return new ResponseEntity(null, HttpStatus.CREATED);
     }
 
     @DeleteMapping("v1/api/product/{id}")
-    public ResponseEntity delete(@PathVariable("id") String id){
-        try {
-            _products.deleteById(id);
-            return new ResponseEntity(null, HttpStatus.OK);
-        } catch (ComandaException e) {
-            return new ResponseEntity<ResponseSchema<String>>(new ResponseSchema<String>(e.listError()), HttpStatus.valueOf(e.getStatusCode()));
-        }
+    public ResponseEntity delete(@PathVariable("id") String id) throws ComandaException {
+        _products.deleteById(id);
+        return new ResponseEntity(null, HttpStatus.OK);
     }
 
 }
