@@ -1,17 +1,11 @@
-package com.comanda.comanda.Commands.Domain;
-
-import com.comanda.comanda.Commands.Enum.CommandsStatusEnum;
-import com.comanda.comanda.Commands.Enum.CommandsTypeEnum;
-import com.comanda.comanda.Table.Repository.TableModelRepository;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+package com.comanda.comanda.Command.Domain;
 
 import java.util.Date;
 import java.util.UUID;
 
-public class CommandsGetDto extends CommandsBaseDto{
+public class CommandGetDto extends CommandBaseDto {
 
-    public CommandsGetDto(UUID id, Date createdAt, String table_id, int type, Date paidAt, int status, Float discount, Float totalPayble) {
+    public CommandGetDto(UUID id, Date createdAt, String table_id, int type, Date paidAt, int status, Float discount, Float totalPayble) {
         super(table_id, type);
         this.id = id;
         this.createdAt = createdAt;

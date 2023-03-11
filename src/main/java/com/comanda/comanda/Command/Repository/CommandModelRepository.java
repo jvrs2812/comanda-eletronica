@@ -1,9 +1,9 @@
-package com.comanda.comanda.Commands.Repository;
+package com.comanda.comanda.Command.Repository;
 
-import com.comanda.comanda.Commands.Domain.CommandsBaseDto;
-import com.comanda.comanda.Commands.Domain.CommandsGetDto;
-import com.comanda.comanda.Commands.Enum.CommandsStatusEnum;
-import com.comanda.comanda.Commands.Enum.CommandsTypeEnum;
+import com.comanda.comanda.Command.Domain.CommandBaseDto;
+import com.comanda.comanda.Command.Domain.CommandGetDto;
+import com.comanda.comanda.Command.Enum.CommandStatusEnum;
+import com.comanda.comanda.Command.Enum.CommandTypeEnum;
 import com.comanda.comanda.Table.Repository.TableModelRepository;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "commands")
-public class CommandsModelRepository {
+public class CommandModelRepository {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, unique = true, nullable = false)
@@ -27,11 +27,11 @@ public class CommandsModelRepository {
     private Date paidAt;
 
     @NotNull
-    private CommandsStatusEnum status;
+    private CommandStatusEnum status;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)
-    private CommandsTypeEnum type;
+    private CommandTypeEnum type;
 
     @ManyToOne
     @JoinColumn(name = "table_id")
@@ -43,13 +43,13 @@ public class CommandsModelRepository {
     @NotNull
     private Float totalPayaple;
 
-    public static CommandsModelRepository fromDto(CommandsBaseDto dto){
-        CommandsModelRepository model = new CommandsModelRepository();
+    public static CommandModelRepository fromDto(CommandBaseDto dto){
+        CommandModelRepository model = new CommandModelRepository();
 
         model.id = UUID.randomUUID();
         model.createdAt = new Date();
 
-        if(CommandsTypeEnum.values()[dto.getType()] == CommandsTypeEnum.TABLE){
+        if(CommandTypeEnum.values()[dto.getType()] == CommandTypeEnum.TABLE){
             TableModelRepository table = new TableModelRepository();
             table.setId(UUID.fromString(dto.getTable_id()));
             model.table_id = table;
@@ -57,13 +57,13 @@ public class CommandsModelRepository {
 
         model.discount = 0.0F;
         model.paidAt = null;
-        model.type = CommandsTypeEnum.values()[dto.getType()];
-        model.status = CommandsStatusEnum.OPENED;
+        model.type = CommandTypeEnum.values()[dto.getType()];
+        model.status = CommandStatusEnum.OPENED;
         model.totalPayaple = 0.0F;
 
         return model;
     }
-    public CommandsGetDto fromModel(){
+    public CommandGetDto fromModel(){
         String tableid;
 
         if(this.table_id == null){
@@ -72,6 +72,6 @@ public class CommandsModelRepository {
             tableid = this.table_id.getId().toString();
         }
 
-        return new CommandsGetDto(this.id, this.createdAt, tableid, this.type.ordinal(), this.paidAt, this.status.ordinal(), this.discount, this.totalPayaple);
+        return new CommandGetDto(this.id, this.createdAt, tableid, this.type.ordinal(), this.paidAt, this.status.ordinal(), this.discount, this.totalPayaple);
     }
 }

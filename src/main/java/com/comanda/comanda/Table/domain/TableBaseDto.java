@@ -3,16 +3,16 @@ package com.comanda.comanda.Table.domain;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+@Data
 public class TableBaseDto {
 
     public TableBaseDto(String identification, int amount_people) {
         this.identification = identification;
         this.amount_people = amount_people;
     }
-
-    @NotNull(message = "identification is null")
-    @NotEmpty(message = "identification is empty")
+    @NotBlank(message = "identification is empty")
     private String identification;
     private int amount_people;
 

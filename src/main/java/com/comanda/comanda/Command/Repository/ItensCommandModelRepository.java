@@ -1,4 +1,4 @@
-package com.comanda.comanda.Commands.Repository;
+package com.comanda.comanda.Command.Repository;
 
 import com.comanda.comanda.Product.Repository.ProductModelRepository;
 import jakarta.persistence.*;
@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "itens_commands")
-public class ItensCommandsModelRepository {
+public class ItensCommandModelRepository {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, unique = true, nullable = false)

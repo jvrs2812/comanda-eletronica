@@ -1,18 +1,10 @@
-package com.comanda.comanda.Commands.Domain;
+package com.comanda.comanda.Command.Domain;
 
-import com.comanda.comanda.Commands.Enum.CommandsStatusEnum;
-import com.comanda.comanda.Commands.Enum.CommandsTypeEnum;
-import com.comanda.comanda.Table.Repository.TableModelRepository;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
+public class CommandBaseDto {
 
-public class CommandsBaseDto {
-
-    public CommandsBaseDto(String table_id, int type) {
+    public CommandBaseDto(String table_id, int type) {
         this.table_id = table_id;
         this.type = type;
     }

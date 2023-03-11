@@ -1,4 +1,4 @@
-package com.comanda.comanda.Commands.Repository;
+package com.comanda.comanda.Command.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface CommandsRepository extends JpaRepository<CommandsModelRepository, UUID> {
+public interface CommandRepository extends JpaRepository<CommandModelRepository, UUID> {
 }
