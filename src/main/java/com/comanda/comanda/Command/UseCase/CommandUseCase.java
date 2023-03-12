@@ -8,18 +8,20 @@ import com.comanda.comanda.Command.Exception.CommandException;
 import com.comanda.comanda.Table.Adpter.IAdpterTable;
 import com.comanda.comanda.utils.ComandaException;
 import com.comanda.comanda.utils.Validations.Validations;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class CommandUseCase {
-    @Autowired
-    private IAdpterCommand _adpter;
 
-    @Autowired
-    private IAdpterTable _adpter_Table;
+    private final IAdpterCommand _adpter;
+
+
+    private final IAdpterTable _adpter_Table;
 
     public void save(CommandBaseDto dto) throws ComandaException {
         if(CommandTypeEnum.values()[dto.getType()] == CommandTypeEnum.TABLE){

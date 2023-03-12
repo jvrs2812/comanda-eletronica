@@ -4,15 +4,17 @@ import com.comanda.comanda.Command.Domain.CommandBaseDto;
 import com.comanda.comanda.Command.Domain.CommandGetDto;
 import com.comanda.comanda.Command.Repository.CommandModelRepository;
 import com.comanda.comanda.Command.Repository.CommandRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
+@RequiredArgsConstructor
 public class AdpterCommand implements IAdpterCommand {
-    @Autowired
-    private CommandRepository _repoComands;
+
+    private final CommandRepository _repoComands;
 
     @Override
     public void save(CommandBaseDto dto) {
