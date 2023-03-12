@@ -19,7 +19,7 @@ public class TableController extends HandleValidationException {
 
     @Autowired
     private TableUseCase _table;
-    @PostMapping("v1/api/table")
+    @PostMapping("v1/api/tables")
     public ResponseEntity createTable(@RequestBody @Valid TableBaseDto dto) throws ComandaException {
         _table.save(dto);
         return new ResponseEntity(null, HttpStatus.OK);
@@ -30,7 +30,7 @@ public class TableController extends HandleValidationException {
         return new ResponseEntity<ResponseSchema<ResponsePageable<TableResponseDto>>>(new ResponseSchema<ResponsePageable<TableResponseDto>>(_table.getAll(page)), HttpStatus.OK);
     }
 
-    @DeleteMapping("v1/api/table/{id}")
+    @DeleteMapping("v1/api/tables/{id}")
     public ResponseEntity delete(@PathVariable("id") String id) throws ComandaException {
         _table.delete(id);
         return new ResponseEntity(null, HttpStatus.OK);

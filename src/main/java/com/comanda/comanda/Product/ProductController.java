@@ -26,26 +26,26 @@ public class ProductController extends HandleValidationException {
        return ResponseEntity.ok(new ResponseSchema<ResponsePageable<ProductGetDto>>(_prod));
     }
 
-    @PutMapping("v1/api/product/{id}")
+    @PutMapping("v1/api/products/{id}")
     public ResponseEntity put(@PathVariable("id") String id, @Valid @RequestBody ProductBaseDto dto) throws ComandaException {
         _products.put(id, dto);
         return new ResponseEntity(null, HttpStatus.OK);
     }
 
-    @GetMapping("v1/api/product/{id}")
+    @GetMapping("v1/api/products/{id}")
     public ResponseEntity<ResponseSchema<ProductGetDto>> put(@PathVariable("id") String id) throws ComandaException {
         ProductGetDto _prod = _products.getById(id);
         return new ResponseEntity(new ResponseSchema<ProductGetDto>(_prod), HttpStatus.OK);
     }
 
 
-    @PostMapping(value = "v1/api/product",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "v1/api/products",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity save(@RequestPart("product") @Valid ProductBaseDto dto, @RequestParam MultipartFile[] images) throws ComandaException {
         _products.save(dto, images);
         return new ResponseEntity(null, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("v1/api/product/{id}")
+    @DeleteMapping("v1/api/products/{id}")
     public ResponseEntity delete(@PathVariable("id") String id) throws ComandaException {
         _products.deleteById(id);
         return new ResponseEntity(null, HttpStatus.OK);
