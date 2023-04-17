@@ -1,10 +1,14 @@
 package com.comanda.comanda.utils.Configuration;
 
+import com.comanda.comanda.User.Repository.UserModelRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -19,8 +23,12 @@ import java.util.function.Function;
 public class JwtService {
 
 
-    public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserModelRepository userDetails){
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id_user", userDetails.getId());
+
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
@@ -69,4 +77,14 @@ public class JwtService {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
+    public String getIdUserContextSecurity() {
+        return ((UserModelRepository) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId().toString();
+    }
+
+
+    public UserModelRepository getUserContextSecurity(){
+        return ((UserModelRepository) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    }
+
 }

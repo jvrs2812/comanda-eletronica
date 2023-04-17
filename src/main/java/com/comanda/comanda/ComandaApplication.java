@@ -9,7 +9,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 		                    "com.comanda.comanda.Category.repository",
 		                    "com.comanda.comanda.Table.Repository",
 		                    "com.comanda.comanda.Command.Repository",
-                            "com.comanda.comanda.User.Repository"})
+                            "com.comanda.comanda.User.Repository",
+                            "com.comanda.comanda.Enterprise.Repository"})
 public class ComandaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ComandaApplication.class, args);
