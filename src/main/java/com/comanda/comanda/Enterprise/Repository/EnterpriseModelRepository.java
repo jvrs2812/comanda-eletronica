@@ -4,7 +4,6 @@ import com.comanda.comanda.Enterprise.domain.EnterpriseDto;
 import com.comanda.comanda.User.Repository.UserModelRepository;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import org.joda.time.DateTime;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -149,15 +148,15 @@ public class EnterpriseModelRepository {
 
     public EnterpriseDto convertToDomain(){
         return EnterpriseDto.builder()
-                .cep(this.cep)
-                .address(this.address)
-                .city(this.city)
-                .cnpj(this.cnpj)
                 .email(this.email)
-                .country(this.country)
-                .state(this.state)
-                .telephone(this.telephone)
+                .cep(this.cep)
                 .name(this.name)
+                .state(this.state)
+                .cnpj(this.cnpj)
+                .address(this.address)
+                .country(this.country)
+                .city(this.city)
+                .telephone(this.telephone)
                 .build();
     }
 
