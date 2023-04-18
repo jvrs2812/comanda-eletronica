@@ -2,6 +2,7 @@ package com.comanda.comanda.Product.UseCase;
 
 import com.comanda.comanda.Category.Adpter.IAdpterCategory;
 import com.comanda.comanda.Category.Exception.CategoryException;
+import com.comanda.comanda.Enterprise.Repository.EnterpriseRepository;
 import com.comanda.comanda.Product.Adpter.IAdpterProduct;
 import com.comanda.comanda.Product.Adpter.IStorageAdapter;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
@@ -31,9 +32,12 @@ public class Products {
     @Autowired
     private IStorageAdapter _storage;
 
+    @Autowired
+    private EnterpriseRepository _enterpriserepo;
+
     private static final String[] extensionValid = new String[] {"JPG","JPEG","PNG"};
 
-    public void put(String id, ProductBaseDto base) throws ComandaException {
+    public void put(String id, ProductBaseDto base, String enterpriseId) throws ComandaException {
         if(!Validations.isValidId(base.getCategoryId())) throw new ComandaException(CategoryException.CATEGORY_ID_EXCEPTION);
 
         if(!Validations.isValidId(id)) throw new ComandaException(PRODUCT_ID_ERROR);
@@ -41,17 +45,17 @@ public class Products {
         if(!_product.existProduct(UUID.fromString(id))){
             throw new ComandaException(PRODUCT_NOT_FOUND);
         }
-        _product.put(id, base);
+        _product.put(id, base, this._enterpriserepo.getById(UUID.fromString(enterpriseId)));
     }
 
-    public ResponsePageable<ProductGetDto> getAll(int page) throws ComandaException {
+    public ResponsePageable<ProductGetDto> getAll(int page, String enterpriseId) throws ComandaException {
         if(page <= 0) {
             throw new ComandaException(INVALID_PAGE);
         }
-        return _product.getAll(page);
+        return _product.getAll(page, UUID.fromString(enterpriseId));
     }
 
-    public void save(ProductBaseDto product, MultipartFile[] images) throws ComandaException {
+    public void save(ProductBaseDto product, MultipartFile[] images, String enterpriseId) throws ComandaException {
         if(!Validations.isValidId(product.getCategoryId())) throw new ComandaException(CategoryException.CATEGORY_ID_EXCEPTION);
         if(!_category.exists(product.getCategoryId())) throw new ComandaException(CategoryException.CATEGORY_NOT_FOUND);
 
@@ -59,7 +63,7 @@ public class Products {
 
         product.setImageUrls(urls);
 
-        _product.save(product);
+        _product.save(product, this._enterpriserepo.getById(UUID.fromString(enterpriseId)));
     }
 
     public ProductGetDto getById(String id) throws ComandaException {

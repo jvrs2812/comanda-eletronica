@@ -4,6 +4,7 @@ import com.comanda.comanda.Category.Domain.CategoryBaseDto;
 import com.comanda.comanda.Category.Domain.CategoryGetDto;
 import com.comanda.comanda.Category.repository.CategoryModelRepository;
 import com.comanda.comanda.Category.repository.CategoryRepository;
+import com.comanda.comanda.Enterprise.Repository.EnterpriseModelRepository;
 import com.comanda.comanda.Table.domain.TableResponseDto;
 import com.comanda.comanda.utils.commom.ResponsePageable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,12 @@ public class AdpterCategory implements IAdpterCategory{
     @Autowired
     private CategoryRepository _repo;
     @Override
-    public ResponsePageable<CategoryGetDto> getAll(int page) {
+    public ResponsePageable<CategoryGetDto> getAll(int page, UUID enterprise_id) {
         Pageable pageable = PageRequest.of(page - 1, 20);
 
         List<CategoryGetDto> lista = new ArrayList<CategoryGetDto>();
 
-        Page<CategoryModelRepository> model = _repo.findAll(pageable);
+        Page<CategoryModelRepository> model = _repo.findAll(pageable, enterprise_id);
 
         for (int i = 0; i < model.stream().count(); i++) {
             lista.add(model.getContent().get(i).convertToDomain());
@@ -39,8 +40,8 @@ public class AdpterCategory implements IAdpterCategory{
     }
 
     @Override
-    public void save(CategoryBaseDto dto) {
-        _repo.save(CategoryModelRepository.convertToModel(dto, true));
+    public void save(CategoryBaseDto dto, EnterpriseModelRepository enterprise_id) {
+        _repo.save(CategoryModelRepository.convertToModel(dto, true, enterprise_id));
     }
 
     @Override

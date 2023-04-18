@@ -2,6 +2,8 @@ package com.comanda.comanda.Category.repository;
 
 import com.comanda.comanda.Category.Domain.CategoryBaseDto;
 import com.comanda.comanda.Category.Domain.CategoryGetDto;
+import com.comanda.comanda.Enterprise.Repository.EnterpriseModelRepository;
+import com.comanda.comanda.Enterprise.Repository.EnterpriseRepository;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -29,6 +31,11 @@ public class CategoryModelRepository {
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateAt;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "enterprise_id")
+    private EnterpriseModelRepository enterpriseId;
 
     public UUID getId() {
         return id;
@@ -74,11 +81,12 @@ public class CategoryModelRepository {
         return new CategoryGetDto(id.toString(), title, description, createAt, updateAt);
     }
 
-    static public CategoryModelRepository convertToModel(CategoryBaseDto dto, boolean create){
+    static public CategoryModelRepository convertToModel(CategoryBaseDto dto, boolean create, EnterpriseModelRepository enterpriseId){
         CategoryModelRepository category = new CategoryModelRepository();
         category.id = UUID.randomUUID();
         category.description = dto.getDescription();
         category.title = dto.getTitle();
+        category.enterpriseId = enterpriseId;
 
         if(create) category.createAt = new Date();
 

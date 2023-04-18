@@ -1,6 +1,7 @@
 package com.comanda.comanda.Product.Repository;
 
 import com.comanda.comanda.Category.repository.CategoryModelRepository;
+import com.comanda.comanda.Enterprise.Repository.EnterpriseModelRepository;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
 import com.comanda.comanda.Product.domain.ProductGetDto;
 import jakarta.persistence.*;
@@ -34,6 +35,19 @@ public class ProductModelRepository {
     @ManyToOne
     @JoinColumn(name = "categoryId")
     private CategoryModelRepository categoryId;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "enterprise_id")
+    private EnterpriseModelRepository enterpriseId;
+
+    public EnterpriseModelRepository getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(EnterpriseModelRepository enterpriseId) {
+        this.enterpriseId = enterpriseId;
+    }
 
     public List<String> getImageUrls() {
         return imageUrls;
@@ -95,7 +109,7 @@ public class ProductModelRepository {
         return new ProductGetDto(id, title, description, price, imageUrls, obs, categoryId.getId().toString());
     }
 
-    static public ProductModelRepository convertToModel(ProductBaseDto dto){
+    static public ProductModelRepository convertToModel(ProductBaseDto dto, EnterpriseModelRepository enterpriseId){
         ProductModelRepository prod = new ProductModelRepository();
         prod.description = dto.getDescription();
         prod.price = dto.getPrice();
@@ -105,6 +119,7 @@ public class ProductModelRepository {
         category.setId(UUID.fromString(dto.getCategoryId()));
 
         prod.categoryId = category;
+        prod.enterpriseId = enterpriseId;
 
         prod.obs = dto.getObs();
         prod.imageUrls = dto.getImageUrls();

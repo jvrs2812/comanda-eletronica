@@ -20,15 +20,15 @@ public class ProductController extends HandleValidationException {
     @Autowired
     private Products _products;
 
-    @GetMapping("v1/api/products")
-    public ResponseEntity<ResponseSchema<ResponsePageable<ProductGetDto>>> getAll(@RequestParam int page) throws ComandaException {
-       ResponsePageable<ProductGetDto> _prod = _products.getAll(page);
+    @GetMapping("v1/api/{enterpriseId}/products")
+    public ResponseEntity<ResponseSchema<ResponsePageable<ProductGetDto>>> getAll(@PathVariable("enterpriseId") String enterpriseId, @RequestParam int page) throws ComandaException {
+       ResponsePageable<ProductGetDto> _prod = _products.getAll(page, enterpriseId);
        return ResponseEntity.ok(new ResponseSchema<ResponsePageable<ProductGetDto>>(_prod));
     }
 
-    @PutMapping("v1/api/products/{id}")
-    public ResponseEntity put(@PathVariable("id") String id, @Valid @RequestBody ProductBaseDto dto) throws ComandaException {
-        _products.put(id, dto);
+    @PutMapping("v1/api/{enterpriseId}/products/{id}")
+    public ResponseEntity put(@PathVariable("enterpriseId") String enterpriseId, @PathVariable("id") String id, @Valid @RequestBody ProductBaseDto dto) throws ComandaException {
+        _products.put(id, dto, enterpriseId);
         return new ResponseEntity(null, HttpStatus.OK);
     }
 
@@ -39,9 +39,9 @@ public class ProductController extends HandleValidationException {
     }
 
 
-    @PostMapping(value = "v1/api/products",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity save(@RequestPart("product") @Valid ProductBaseDto dto, @RequestParam MultipartFile[] images) throws ComandaException {
-        _products.save(dto, images);
+    @PostMapping(value = "v1/api/{enterpriseId}/products",consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity save(@PathVariable("enterpriseId") String enterpriseId, @RequestPart("product") @Valid ProductBaseDto dto, @RequestParam MultipartFile[] images) throws ComandaException {
+        _products.save(dto, images, enterpriseId);
         return new ResponseEntity(null, HttpStatus.CREATED);
     }
 

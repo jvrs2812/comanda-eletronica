@@ -25,24 +25,24 @@ public class CategoryController extends HandleValidationException {
         this._cat = cat;
     }
 
-    @GetMapping("v1/api/category")
-    public ResponseEntity<ResponseSchema<ResponsePageable<CategoryGetDto>>> getAllCategory(@RequestParam("page") int page){
-        return ResponseEntity.ok(new ResponseSchema<ResponsePageable<CategoryGetDto>>(_cat.getAll(page)));
+    @GetMapping("v1/api/{enterpriseId}/category")
+    public ResponseEntity<ResponseSchema<ResponsePageable<CategoryGetDto>>> getAllCategory(@PathVariable("enterpriseId") String enterpriseId, @RequestParam("page") int page){
+        return ResponseEntity.ok(new ResponseSchema<ResponsePageable<CategoryGetDto>>(_cat.getAll(page, enterpriseId)));
     }
 
-    @GetMapping("v1/api/category/{id}")
-    public ResponseEntity<ResponseSchema<CategoryGetDto>> getCategoryId(@PathVariable("id") String id) throws ComandaException {
+    @GetMapping("v1/api/{enterpriseId}/category/{id}")
+    public ResponseEntity<ResponseSchema<CategoryGetDto>> getCategoryId(@PathVariable("enterpriseId") String enterpriseId, @PathVariable("id") String id) throws ComandaException {
         CategoryGetDto cat = _cat.getIdCategory(id);
         return new ResponseEntity<ResponseSchema<CategoryGetDto>>(new ResponseSchema<CategoryGetDto>(cat), HttpStatus.OK);
     }
 
-    @PostMapping("v1/api/category")
-    public ResponseEntity post(@RequestBody @Valid CategoryBaseDto dto){
-        _cat.save(dto);
+    @PostMapping("v1/api/{enterpriseId}/category")
+    public ResponseEntity post(@PathVariable("enterpriseId") String enterpriseId, @RequestBody @Valid CategoryBaseDto dto){
+        _cat.save(dto, enterpriseId);
         return new ResponseEntity(null, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("v1/api/category/{categoryId}")
+    @DeleteMapping("v1/api/{enterpriseId}/category/{categoryId}")
     public ResponseEntity del(@PathVariable("categoryId") String id) throws ComandaException {
         _cat.delete(id);
         return new ResponseEntity(null, HttpStatus.OK);

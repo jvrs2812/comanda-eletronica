@@ -1,5 +1,6 @@
 package com.comanda.comanda.Product.Adpter;
 
+import com.comanda.comanda.Enterprise.Repository.EnterpriseModelRepository;
 import com.comanda.comanda.Product.Repository.ProductModelRepository;
 import com.comanda.comanda.Product.Repository.ProductRepository;
 import com.comanda.comanda.Product.domain.ProductBaseDto;
@@ -25,10 +26,10 @@ public class AdpterProduct implements IAdpterProduct {
     private ProductRepository _repo;
 
     @Override
-    public ResponsePageable<ProductGetDto> getAll(int page) {
+    public ResponsePageable<ProductGetDto> getAll(int page, UUID enterpriseId) {
         Pageable pageable = PageRequest.of(page - 1, 20);
 
-        Page<ProductModelRepository> lista = _repo.findAll(pageable);
+        Page<ProductModelRepository> lista = _repo.findAll(pageable, enterpriseId);
 
         List<ProductGetDto> listaDomain = new ArrayList<ProductGetDto>();
 
@@ -42,13 +43,13 @@ public class AdpterProduct implements IAdpterProduct {
     }
 
     @Override
-    public void save(ProductBaseDto dto) {
-        _repo.save(ProductModelRepository.convertToModel(dto));
+    public void save(ProductBaseDto dto, EnterpriseModelRepository enterpriseId) {
+        _repo.save(ProductModelRepository.convertToModel(dto, enterpriseId));
     }
 
     @Override
-    public void put(String id, ProductBaseDto dto) {
-        ProductModelRepository productModelRepository = ProductModelRepository.convertToModel(dto);
+    public void put(String id, ProductBaseDto dto, EnterpriseModelRepository enterpriseId) {
+        ProductModelRepository productModelRepository = ProductModelRepository.convertToModel(dto, enterpriseId);
 
         productModelRepository.setId(UUID.fromString(id));
 

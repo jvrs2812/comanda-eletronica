@@ -4,6 +4,7 @@ import com.comanda.comanda.Category.Adpter.IAdpterCategory;
 import com.comanda.comanda.Category.Domain.CategoryBaseDto;
 import com.comanda.comanda.Category.Domain.CategoryGetDto;
 import com.comanda.comanda.Category.Exception.CategoryException;
+import com.comanda.comanda.Enterprise.Repository.EnterpriseRepository;
 import com.comanda.comanda.Product.Adpter.IAdpterProduct;
 import com.comanda.comanda.utils.ComandaException;
 import com.comanda.comanda.utils.Validations.Validations;
@@ -23,12 +24,15 @@ public class Categories {
     @Autowired
     private IAdpterProduct _prod;
 
-    public ResponsePageable<CategoryGetDto> getAll(int page){
-        return _adpter.getAll(page);
+    @Autowired
+    private EnterpriseRepository _repoEnterprise;
+
+    public ResponsePageable<CategoryGetDto> getAll(int page, String enterpriseId){
+        return _adpter.getAll(page, UUID.fromString(enterpriseId));
     }
 
-    public void save(CategoryBaseDto dto){
-        _adpter.save(dto);
+    public void save(CategoryBaseDto dto, String enterpriseId){
+        _adpter.save(dto, this._repoEnterprise.getById(UUID.fromString(enterpriseId)));
     }
 
     public void delete(String id) throws ComandaException {
