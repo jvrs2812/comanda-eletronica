@@ -157,6 +157,7 @@ public class EnterpriseModelRepository {
                 .country(this.country)
                 .city(this.city)
                 .telephone(this.telephone)
+                .id(this.id.toString())
                 .build();
     }
 

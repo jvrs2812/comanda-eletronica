@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommandController extends HandleValidationException {
     private final CommandUseCase _commands;
-    @PostMapping("v1/api/commands")
-    public ResponseEntity save(@RequestBody @Valid CommandBaseDto dto) throws ComandaException {
-        _commands.save(dto);
+    @PostMapping("v1/api/{enterpriseId}/commands")
+    public ResponseEntity save(@PathVariable("enterpriseId") String enterpriseId, @RequestBody @Valid CommandBaseDto dto) throws ComandaException {
+        _commands.save(dto, enterpriseId);
         return new ResponseEntity(null, HttpStatus.OK);
     }
 
-    @GetMapping("v1/api/commands/{id}")
-    public ResponseEntity<ResponseSchema<CommandGetDto>> getById(@PathVariable("id") String id) throws ComandaException {
-        CommandGetDto response = _commands.getById(id);
+    @GetMapping("v1/api/{enterpriseId}/commands/{id}")
+    public ResponseEntity<ResponseSchema<CommandGetDto>> getById(@PathVariable("enterpriseId") String enterpriseId, @PathVariable("id") String id) throws ComandaException {
+        CommandGetDto response = _commands.getById(id, enterpriseId);
         return new ResponseEntity<ResponseSchema<CommandGetDto>>(new ResponseSchema<CommandGetDto>(response),HttpStatus.OK);
     }
 }

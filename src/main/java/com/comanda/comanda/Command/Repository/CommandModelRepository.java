@@ -4,6 +4,7 @@ import com.comanda.comanda.Command.Domain.CommandBaseDto;
 import com.comanda.comanda.Command.Domain.CommandGetDto;
 import com.comanda.comanda.Command.Enum.CommandStatusEnum;
 import com.comanda.comanda.Command.Enum.CommandTypeEnum;
+import com.comanda.comanda.Enterprise.Repository.EnterpriseModelRepository;
 import com.comanda.comanda.Table.Repository.TableModelRepository;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -38,12 +39,17 @@ public class CommandModelRepository {
     private TableModelRepository table_id;
 
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "enterprise_id")
+    private EnterpriseModelRepository enterpriseId;
+
+    @NotNull
     private Float discount;
 
     @NotNull
     private Float totalPayaple;
 
-    public static CommandModelRepository fromDto(CommandBaseDto dto){
+    public static CommandModelRepository fromDto(CommandBaseDto dto, EnterpriseModelRepository enterpriseId){
         CommandModelRepository model = new CommandModelRepository();
 
         model.id = UUID.randomUUID();
@@ -60,6 +66,7 @@ public class CommandModelRepository {
         model.type = CommandTypeEnum.values()[dto.getType()];
         model.status = CommandStatusEnum.OPENED;
         model.totalPayaple = 0.0F;
+        model.enterpriseId = enterpriseId;
 
         return model;
     }

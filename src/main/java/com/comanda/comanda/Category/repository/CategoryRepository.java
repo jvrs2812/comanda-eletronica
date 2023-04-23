@@ -15,4 +15,10 @@ public interface CategoryRepository extends JpaRepository<CategoryModelRepositor
     @Query(value = "select * from category where enterprise_id = :enterprise_id", nativeQuery = true)
     Page<CategoryModelRepository> findAll(Pageable pageable, @Param("enterprise_id") UUID enterpriseId);
 
+    @Query(value = "select case when count(*) > 0 then true else false end from category where id = :id and enterprise_id = :enterprise_id", nativeQuery = true)
+    boolean existById(@Param("id") UUID id, @Param("enterprise_id") UUID enterprise_id);
+
+    @Query(value = "select * from category where id = :id and enterprise_id = :enterprise_id", nativeQuery = true)
+    CategoryModelRepository findById(@Param("id") UUID id, @Param("enterprise_id") UUID enterprise_id);
+
 }

@@ -5,6 +5,7 @@ import com.comanda.comanda.Category.Domain.CategoryGetDto;
 import com.comanda.comanda.Category.repository.CategoryModelRepository;
 import com.comanda.comanda.Category.repository.CategoryRepository;
 import com.comanda.comanda.Enterprise.Repository.EnterpriseModelRepository;
+import com.comanda.comanda.Enterprise.domain.EnterpriseDto;
 import com.comanda.comanda.Table.domain.TableResponseDto;
 import com.comanda.comanda.utils.commom.ResponsePageable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +41,13 @@ public class AdpterCategory implements IAdpterCategory{
     }
 
     @Override
-    public void save(CategoryBaseDto dto, EnterpriseModelRepository enterprise_id) {
-        _repo.save(CategoryModelRepository.convertToModel(dto, true, enterprise_id));
+    public void save(CategoryBaseDto dto, EnterpriseDto enterprise) {
+        _repo.save(CategoryModelRepository.convertToModel(dto, true, EnterpriseModelRepository.convertToModel(enterprise, null)));
     }
 
     @Override
-    public boolean exists(String id) {
-        return _repo.existsById(UUID.fromString(id));
+    public boolean exists(String id, String enterpriseId) {
+        return _repo.existById(UUID.fromString(id), UUID.fromString(enterpriseId));
     }
 
     @Override
@@ -55,7 +56,7 @@ public class AdpterCategory implements IAdpterCategory{
     }
 
     @Override
-    public CategoryGetDto getById(UUID id) {
+    public CategoryGetDto getById(UUID id, UUID enterpriseId) {
         return _repo.getById(id).convertToDomain();
     }
 }

@@ -1,5 +1,6 @@
 package com.comanda.comanda.Enterprise.UseCases;
 
+import com.comanda.comanda.Enterprise.Adpter.IAdpterEnterprise;
 import com.comanda.comanda.Enterprise.Exception.EnterpriseException;
 import com.comanda.comanda.Enterprise.Repository.EnterpriseModelRepository;
 import com.comanda.comanda.Enterprise.Repository.EnterpriseRepository;
@@ -24,29 +25,18 @@ public class Enterprise {
     private JwtService jwtService;
 
     @Autowired
-    private EnterpriseRepository enterpriseRepository;
+    private IAdpterEnterprise adapterEnterprise;
 
     public void save(EnterpriseDto enterpriseDto) throws ComandaException {
 
-        if(this.enterpriseRepository.existCnpj(enterpriseDto.getCnpj()))
+        if(this.adapterEnterprise.existCnpj(enterpriseDto.getCnpj()))
             throw new ComandaException(EnterpriseException.ENTERPRISE_CNPJ_EXISTS);
 
-        EnterpriseModelRepository model = EnterpriseModelRepository.convertToModel(enterpriseDto,
-                this.jwtService.getUserContextSecurity());
-
-        this.enterpriseRepository.save(model);
+        this.adapterEnterprise.save(enterpriseDto, this.jwtService.getUserContextSecurity().toDto());
 
     }
 
     public List<EnterpriseDto> getMyEnterprise(){
-        List<EnterpriseModelRepository> models = this.enterpriseRepository.findAllEnterpriseByUserId(UUID.fromString(this.jwtService.getIdUserContextSecurity()));
-        List<EnterpriseDto> dtos = new ArrayList<EnterpriseDto>();
-
-        for (EnterpriseModelRepository model:
-             models) {
-            dtos.add(model.convertToDomain());
-        }
-
-        return dtos;
+        return this.adapterEnterprise.findAllEnterpriseByUserId(this.jwtService.getIdUserContextSecurity());
     }
 }

@@ -32,7 +32,7 @@ public class CategoryController extends HandleValidationException {
 
     @GetMapping("v1/api/{enterpriseId}/category/{id}")
     public ResponseEntity<ResponseSchema<CategoryGetDto>> getCategoryId(@PathVariable("enterpriseId") String enterpriseId, @PathVariable("id") String id) throws ComandaException {
-        CategoryGetDto cat = _cat.getIdCategory(id);
+        CategoryGetDto cat = _cat.getIdCategory(id, enterpriseId);
         return new ResponseEntity<ResponseSchema<CategoryGetDto>>(new ResponseSchema<CategoryGetDto>(cat), HttpStatus.OK);
     }
 
@@ -43,8 +43,8 @@ public class CategoryController extends HandleValidationException {
     }
 
     @DeleteMapping("v1/api/{enterpriseId}/category/{categoryId}")
-    public ResponseEntity del(@PathVariable("categoryId") String id) throws ComandaException {
-        _cat.delete(id);
+    public ResponseEntity del(@PathVariable("enterpriseId") String enterpriseId, @PathVariable("categoryId") String id) throws ComandaException {
+        _cat.delete(id, enterpriseId);
         return new ResponseEntity(null, HttpStatus.OK);
     }
 }

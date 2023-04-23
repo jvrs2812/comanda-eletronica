@@ -2,6 +2,8 @@ package com.comanda.comanda.Product.UseCase;
 
 import com.comanda.comanda.Category.Adpter.IAdpterCategory;
 import com.comanda.comanda.Category.Exception.CategoryException;
+import com.comanda.comanda.Enterprise.Adpter.IAdpterEnterprise;
+import com.comanda.comanda.Enterprise.Repository.EnterpriseModelRepository;
 import com.comanda.comanda.Enterprise.Repository.EnterpriseRepository;
 import com.comanda.comanda.Product.Adpter.IAdpterProduct;
 import com.comanda.comanda.Product.Adpter.IStorageAdapter;
@@ -33,7 +35,7 @@ public class Products {
     private IStorageAdapter _storage;
 
     @Autowired
-    private EnterpriseRepository _enterpriserepo;
+    private IAdpterEnterprise _enterpriseAdpter;
 
     private static final String[] extensionValid = new String[] {"JPG","JPEG","PNG"};
 
@@ -45,7 +47,7 @@ public class Products {
         if(!_product.existProduct(UUID.fromString(id))){
             throw new ComandaException(PRODUCT_NOT_FOUND);
         }
-        _product.put(id, base, this._enterpriserepo.getById(UUID.fromString(enterpriseId)));
+        _product.put(id, base, EnterpriseModelRepository.convertToModel(this._enterpriseAdpter.findById(UUID.fromString(enterpriseId)), null));
     }
 
     public ResponsePageable<ProductGetDto> getAll(int page, String enterpriseId) throws ComandaException {
@@ -57,13 +59,13 @@ public class Products {
 
     public void save(ProductBaseDto product, MultipartFile[] images, String enterpriseId) throws ComandaException {
         if(!Validations.isValidId(product.getCategoryId())) throw new ComandaException(CategoryException.CATEGORY_ID_EXCEPTION);
-        if(!_category.exists(product.getCategoryId())) throw new ComandaException(CategoryException.CATEGORY_NOT_FOUND);
+        if(!_category.exists(product.getCategoryId(), enterpriseId)) throw new ComandaException(CategoryException.CATEGORY_NOT_FOUND);
 
         List<String> urls = saveImageProduct(images);
 
         product.setImageUrls(urls);
 
-        _product.save(product, this._enterpriserepo.getById(UUID.fromString(enterpriseId)));
+        _product.save(product, EnterpriseModelRepository.convertToModel(this._enterpriseAdpter.findById(UUID.fromString(enterpriseId)), null));
     }
 
     public ProductGetDto getById(String id) throws ComandaException {

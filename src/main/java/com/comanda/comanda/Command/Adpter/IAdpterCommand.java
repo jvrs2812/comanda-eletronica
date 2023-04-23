@@ -6,9 +6,9 @@ import com.comanda.comanda.Command.Domain.CommandGetDto;
 import java.util.UUID;
 
 public interface IAdpterCommand {
-    void save(CommandBaseDto dto);
+    public void save(CommandBaseDto dto, String enterprise_id);
 
-    CommandGetDto getById(UUID id);
+    CommandGetDto getById(UUID id, String enterprise_id);
 
-    boolean existsById(UUID id);
+    boolean existsById(UUID id, String enterprise_id);
 }

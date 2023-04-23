@@ -32,25 +32,25 @@ public class Categories {
     }
 
     public void save(CategoryBaseDto dto, String enterpriseId){
-        _adpter.save(dto, this._repoEnterprise.getById(UUID.fromString(enterpriseId)));
+        _adpter.save(dto, this._repoEnterprise.getById(UUID.fromString(enterpriseId)).convertToDomain());
     }
 
-    public void delete(String id) throws ComandaException {
+    public void delete(String id, String enterpriseId) throws ComandaException {
         if(!Validations.isValidId(id)) throw new ComandaException(CategoryException.CATEGORY_ID_EXCEPTION);
 
-        if(!_adpter.exists(id)) throw new ComandaException(CategoryException.CATEGORY_NOT_FOUND);
+        if(!_adpter.exists(id, enterpriseId)) throw new ComandaException(CategoryException.CATEGORY_NOT_FOUND);
 
         if(_prod.existwithCategoryId(UUID.fromString(id))) throw new ComandaException(CategoryException.CATEGORY_PRODUCT_EXIST);
 
         _adpter.del(UUID.fromString(id));
     }
 
-    public CategoryGetDto getIdCategory(String id) throws ComandaException {
+    public CategoryGetDto getIdCategory(String id, String enterpriseId) throws ComandaException {
         if(!Validations.isValidId(id)) throw new ComandaException(CategoryException.CATEGORY_ID_EXCEPTION);
 
-        if(!_adpter.exists(id)) throw new ComandaException(CategoryException.CATEGORY_NOT_FOUND);
+        if(!_adpter.exists(id, enterpriseId)) throw new ComandaException(CategoryException.CATEGORY_NOT_FOUND);
 
-        return _adpter.getById(UUID.fromString(id));
+        return _adpter.getById(UUID.fromString(id), UUID.fromString(enterpriseId));
     }
 
 }

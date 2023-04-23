@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 @Builder
 public class EnterpriseDto {
+    private String id;
 
     @NotBlank(message = "name is required")
     private String name;
